@@ -8,6 +8,12 @@ on classes by utilizing
 auto-generating optimized methods. It also exposes options for configuring how
 each field should be serialized.
 
+## Installation
+
+```bash
+deno add jsr:@arexon/serdeco
+```
+
 ## Usage
 
 Annotate the `Ser` decorator on your class to generate a `toJSON()`. It must
