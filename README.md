@@ -41,7 +41,8 @@ assertEquals(JSON.stringify(new Person()), `{"name":"Alice"}`);
 
 A field (instance field or getter) to use as the serialized value for the class.
 This will only apply if every other field annotated with `Ser` is undefined at
-serialization-time.
+serialization-time. However, this can be changed with
+`GlobalOptions.requireUndefinedForTransparency`.
 
 ```ts
 import { Ser } from "@arexon/serdeco";
@@ -116,10 +117,10 @@ class Rgb {
   @Ser({ custom: [(_value, rgb) => `${rgb.r},${rgb.g},${rgb.b}`, "normal"] })
   readonly #value: string = "";
 
-  constructor(r: number, g: number, a: number) {
+  constructor(r: number, g: number, b: number) {
     this.r = r;
     this.g = g;
-    this.b = a;
+    this.b = b;
   }
 }
 

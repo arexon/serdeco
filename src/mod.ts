@@ -9,6 +9,10 @@
 import { type AnyConstructor, equal } from "@std/assert";
 import { toCamelCase, toKebabCase, toPascalCase, toSnakeCase } from "@std/text";
 
+/**
+ * An error that occurs when referring to an instance or getter field in
+ * {@link ClassOptions.transparent} that does not exist on the class.
+ */
 export class UnknownTransparentFieldError extends TypeError {
   constructor(className: string, fieldName: string) {
     super(
@@ -17,6 +21,10 @@ export class UnknownTransparentFieldError extends TypeError {
   }
 }
 
+/**
+ * An error that occurs when a class already has a `toJSON()` method defined by
+ * either another {@link Ser} decorator or manually implemented.
+ */
 export class DuplicateToJsonError extends TypeError {
   constructor(className: string) {
     super(
@@ -57,7 +65,8 @@ export interface ClassOptions {
    * value for the class.
    *
    * This will only apply if every other field annotated with {@link Ser} is
-   * undefined at serialization-time.
+   * undefined at serialization-time. However, this can be changed with
+   * {@link GlobalOptions.requireUndefinedForTransparency}.
    */
   transparent?: string;
 }
@@ -99,6 +108,7 @@ export interface FieldOptions<FieldValue = unknown, This = unknown> {
   path?: string;
 }
 
+/** Creates a custom {@link Ser} decorator with configured {@link GlobalOptions}. */
 export function createSer(
   globalOptions: GlobalOptions = {},
 ): <Ctx extends ClassDecoratorContext | ClassFieldDecoratorContext>(
