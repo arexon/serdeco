@@ -285,7 +285,7 @@ function generateToJson(metadata: Metadata): string {
 
       const transparencyCheck = [];
       if (isNotTransparent && metadata.requireUndefinedForTransparency) {
-        transparencyCheck.push(`${value} === undefined`);
+        transparencyCheck.push(`${value}===undefined`);
       }
 
       if (field.default !== undefined || field.custom !== undefined) {
@@ -301,18 +301,18 @@ function generateToJson(metadata: Metadata): string {
         const customOverride = CUSTOM_OVERRIDE_PREFIX + field.index;
         consts.push([
           customOverride,
-          `${FIELDS_METADATA_VAR}.fields["${field.name}"].custom.fn(${value}, this)`,
+          `${FIELDS_METADATA_VAR}.fields["${field.name}"].custom.fn(${value},this)`,
         ]);
         value = customOverride;
       }
 
       if (field.default !== undefined) {
         const isDefault =
-          `equal(${FIELDS_METADATA_VAR}.fields["${field.name}"].default(), this["${field.name}"])`;
+          `equal(${FIELDS_METADATA_VAR}.fields["${field.name}"].default(),this["${field.name}"])`;
         if (isNotTransparent && metadata.requireUndefinedForTransparency) {
           transparencyCheck.push(isDefault);
         }
-        value = `${isDefault} ? undefined : ${value}`;
+        value = `${isDefault}?undefined:${value}`;
       }
 
       if (field.path !== undefined) {
@@ -327,7 +327,7 @@ function generateToJson(metadata: Metadata): string {
       }
 
       if (isNotTransparent && metadata.requireUndefinedForTransparency) {
-        transparencyChecks.push(`(${transparencyCheck.join(" || ")})`);
+        transparencyChecks.push(`(${transparencyCheck.join("||")})`);
       }
     }
 
@@ -356,7 +356,7 @@ function generateToJson(metadata: Metadata): string {
     if (
       transparencyChecks.length > 0 && metadata.requireUndefinedForTransparency
     ) {
-      body += `const ${RESULT_VAR} =`;
+      body += `const ${RESULT_VAR}=`;
       appendObjectProps(objectProps);
       body += ";";
     } else if (metadata.transparent === undefined) {
@@ -381,13 +381,13 @@ function generateToJson(metadata: Metadata): string {
         value = `this["${transparentField.name}"]`;
       }
 
-      value = `${value}?.toJSON?.() ?? ${value}`;
+      value = `${value}?.toJSON?.()??${value}`;
 
       if (
         transparencyChecks.length > 0 &&
         metadata.requireUndefinedForTransparency
       ) {
-        body += `if(${transparencyChecks.join(" && ")})return ${value};`;
+        body += `if(${transparencyChecks.join("&&")})return ${value};`;
       } else {
         body += `return ${value};`;
       }
